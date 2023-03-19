@@ -1,4 +1,4 @@
-import { useState } from 'react'; 
+import { useEffect, useState } from 'react'; 
 import Home from './Home';
 import NavItem from '../components/NavItem';
 import Fav from './Fav';
@@ -24,6 +24,7 @@ import {
   SliderThumb,
   SliderMark,
   useToast,
+  FormControl
 } from '@chakra-ui/react'
 import Api from '../services/Api';
 
@@ -37,6 +38,7 @@ function Base() {
   const [image_url, setImage_url] = useState('');
 
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const [disableAddButton, setDisableAddButton] = useState(true)
   const toast = useToast()
 
   const handleHomePage = () => {
@@ -46,6 +48,22 @@ function Base() {
   const handleFavPage = () => {
     setHome(false)
   }
+
+  useEffect(() => {
+    if (title !== '' && description !== '' && release_date !== '' && image_url !== '') {
+      setDisableAddButton(false)
+    } else {
+      setDisableAddButton(true)
+    }
+  },[title, description, release_date, image_url])
+
+  useEffect(() => {
+    setTitle('')
+    setDescription('')
+    setRate(1)
+    setImage_url('')
+    setRelease_date('')
+  }, [isOpen])
 
   const handleCreateMovie = () => {
     console.log(release_date)
@@ -58,7 +76,7 @@ function Base() {
       image_url: image_url,
       isFavorite: false
     })
-    .then((response) => {
+    .then(() => {
       toast({
         title: `Filme Adicionado com sucesso!`,
         status: 'success',
@@ -76,6 +94,7 @@ function Base() {
     })
 
     onClose()
+    setDisableAddButton(true)
   }
 
   return (
@@ -114,7 +133,10 @@ function Base() {
                 alignItems="flex-end"
                 as="nav"
             >
-                <Button colorScheme='green' w="100%" onClick={onOpen}>Adicionar</Button>
+                <Button colorScheme='green' w="100%" onClick={() => {
+                  setDisableAddButton(true)
+                  onOpen()
+                }}>Adicionar</Button>
             </Flex>
         </Flex>
     {home ? 
@@ -133,76 +155,83 @@ function Base() {
           <DrawerHeader borderBottomWidth='1px'>
             Adicionar um filme
           </DrawerHeader>
-
           <DrawerBody>
             <Stack spacing='24px'>
               <Box>
-                <FormLabel>Título</FormLabel>
-                <Input
-                  id='title'
-                  placeholder='"Forest Gump"'
-                  onChange={(v) => setTitle(v.target.value)}
-                />
-              </Box>
-              <Box>
-                <FormLabel>Resumo</FormLabel>
-                <Textarea
-                  id='desc'
-                  placeholder='"Filme de comédia em que o protagonista conta suas histórias"'
-                  resize='none'
-                  onChange={(v) => setDescription(v.target.value)}
+                <FormControl isRequired>
+                  <FormLabel>Título</FormLabel>
+                  <Input
+                    id='title'
+                    placeholder='"Forest Gump"'
+                    onChange={(v) => setTitle(v.target.value)}
                   />
+                </FormControl>
               </Box>
               <Box>
+              <FormControl isRequired>
+                <FormLabel>Resumo</FormLabel>
+                  <Textarea
+                    id='desc'
+                    placeholder='"Filme de comédia em que o protagonista conta suas histórias"'
+                    resize='none'
+                    onChange={(v) => setDescription(v.target.value)}
+                    />
+                </FormControl>
+              </Box>
+              <Box>
+                <FormControl isRequired>
                 <FormLabel>Avaliação</FormLabel>
-                <Slider defaultValue={1} min={1} max={5} step={1} colorScheme='teal' onChange={(v) => setRate(v)}
-                >
-                    <SliderMark value={1} mt='2' fontSize='sm'>
-                        1
-                    </SliderMark>
-                    <SliderMark value={2} mt='2' fontSize='sm'>
-                        2
-                    </SliderMark>
-                    <SliderMark value={3} mt='2' fontSize='sm'>
-                        3
-                    </SliderMark>
-                    <SliderMark value={4} mt='2' fontSize='sm'>
-                        4
-                    </SliderMark>
-                    <SliderMark value={5} mt='2' fontSize='sm'>
-                        5
-                    </SliderMark>
-                    <SliderTrack >
-                        <Box position='relative' right={10} />
-                        <SliderFilledTrack bg='tomato' />
-                    </SliderTrack>
-                    <SliderThumb boxSize={6} />
-                </Slider>
+                  <Slider defaultValue={1} min={1} max={5} step={1} colorScheme='teal' onChange={(v) => setRate(v)}>
+                      <SliderMark value={1} mt='2' fontSize='sm'>
+                          1
+                      </SliderMark>
+                      <SliderMark value={2} mt='2' fontSize='sm'>
+                          2
+                      </SliderMark>
+                      <SliderMark value={3} mt='2' fontSize='sm'>
+                          3
+                      </SliderMark>
+                      <SliderMark value={4} mt='2' fontSize='sm'>
+                          4
+                      </SliderMark>
+                      <SliderMark value={5} mt='2' fontSize='sm'>
+                          5
+                      </SliderMark>
+                      <SliderTrack >
+                          <Box position='relative' right={10} />
+                          <SliderFilledTrack bg='tomato' />
+                      </SliderTrack>
+                      <SliderThumb boxSize={6} />
+                  </Slider>
+                </FormControl>
               </Box>
               <Box>
-                <FormLabel>URL da imagem</FormLabel>
-                <Input
-                  id='imageURL'
-                  placeholder='"http://image.com"'
-                  onChange={(v) => setImage_url(v.target.value)}
-                />
+                <FormControl isRequired>
+                  <FormLabel>URL da imagem</FormLabel>
+                  <Input
+                    id='imageURL'
+                    placeholder='"http://image.com"'
+                    onChange={(v) => setImage_url(v.target.value)}
+                  />
+                </FormControl>
               </Box>
               <Box pt='1.5rem'>
-                <FormLabel>Data de Lançamento</FormLabel>
-                <Input
-                  size="md"
-                  type="date"
-                  onChange={(v) => setRelease_date(v.target.value)}
-                />
+                <FormControl isRequired>
+                  <FormLabel>Data de Lançamento</FormLabel>
+                  <Input
+                    size="md"
+                    type="date"
+                    onChange={(v) => setRelease_date(v.target.value)}
+                  />
+                </FormControl>
               </Box>
             </Stack>
           </DrawerBody>
-
           <DrawerFooter borderTopWidth='1px'>
             <Button variant='outline' mr={3} onClick={onClose}>
               Cancelar
             </Button>
-            <Button colorScheme='blue' onClick={handleCreateMovie} >Criar</Button>
+            <Button isDisabled={disableAddButton} colorScheme='blue' onClick={handleCreateMovie} >Criar</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

@@ -13,7 +13,7 @@ function Card({ title, image_url, rate, release_date }) {
                     fontSize='sm'
                     fontWeight='bold'
                     textColor='black'
-                    noOfLines={2}
+                    noOfLines={1}
                     p='0.2rem'
                 >
                     {title || ' '}
