@@ -100,11 +100,12 @@ function Base() {
   return (
   <Flex 
     color='white'
-    h='100vh'
+    minH='100vh'
     bgColor='#a9c1c6'
+    bgSize='revert-layer'
   >
     <Flex
-            pos="sticky"
+            pos="fixed"
             left="5"
             h="95vh"
             bgColor='white'
@@ -112,7 +113,7 @@ function Base() {
             marginRight="2.5vw"
             boxShadow="lg"
             borderRadius="12px"
-            w="200px"
+            w="15vw"
             flexDir="column"
             justifyContent="space-between"
         >
@@ -139,10 +140,12 @@ function Base() {
                 }}>Adicionar</Button>
             </Flex>
         </Flex>
-    {home ? 
-    <Home /> :
-    <Fav />
-  }
+        <Flex ml='17vw'>
+        {home ? 
+          <Home /> :
+          <Fav />
+        }
+        </Flex>
   { isOpen && 
       <Drawer
         isOpen={isOpen}
