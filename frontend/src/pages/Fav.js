@@ -9,30 +9,37 @@ function Favoritos() {
     const [movies, setMovies] = useState([]);
     const toast = useToast()
 
-    useEffect(() => {
-        Api.get('/movies')
+    const getMovies = () => {
+        Api.get('/movies/favorites')
         .then((response) => {
-            console.log(response)
-            setMovies(response)
+            setMovies(response.data)
         })
         .catch((err) => {
             toast({
                 title: `Não foi possivel carregar a lista!`,
                 status: 'error',
+                position: 'top',
                 isClosable: true,
             })
         })
-    }, [])
+    }
+
+    const reloadPage = () => {}
+
+    useEffect(() => {
+        getMovies()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [reloadPage])
 
     return (
         <Box flex='5'>
-            { movies.lenth > 0 ?
+            { movies.length > 0 ?
                 <Grid  templateColumns='repeat(4, 1fr)' gap={6} p='1rem'>
                     {
                         movies.map((movie, index) => {
                             return(
-                                <ModalCard key={index} imageUrl={movie.imageUrl} title={movie.title} rating={movie.rating} summary={movie.summary} date={movie.date}>
-                                    <Card imageUrl={movie.imageUrl} title={movie.title} rating={movie.rating} />
+                                <ModalCard key={index} reload={() => reloadPage()}id={movie._id} source='fav' image_url={movie.image_url} title={movie.title} rate={movie.rate} description={movie.description} release_date={movie.release_date}>
+                                    <Card image_url={movie.image_url} title={movie.title} rate={movie.rate} release_date={movie.release_date} />
                                 </ModalCard>
                             )
                         })

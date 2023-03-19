@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'; 
+import { useState } from 'react'; 
 import Home from './Home';
 import NavItem from '../components/NavItem';
-import Favoritos from './Favoritos';
+import Fav from './Fav';
 import {
   Drawer,
   DrawerBody,
@@ -31,54 +31,10 @@ function Base() {
   const [home, setHome] = useState(true);
 
   const [title, setTitle] = useState('');
-  const [summary, setSummary] = useState('');
-  const [rating, setRating] = useState(0);
-  const [dueDate, setDueDate] = useState('');
-  const [imageURL, setImageURL] = useState('');
-
-  const [movies, setMovies] = useState([
-    {
-        imageUrl: 'https://www.ofuxico.com.br/wp-content/uploads/2021/12/Harry-Potter-foto.jpg',
-        title: 'Harry Potter',
-        rating: 4,
-        summary: 'Modern home in city center in the heart of historic Los Angeles'
-    },
-    {
-        imageUrl: 'https://www.ofuxico.com.br/wp-content/uploads/2021/12/Harry-Potter-foto.jpg',
-        title: 'Harry Potter',
-        rating: 3,
-        summary: 'Modern home in city center in the heart of historic Los Angeles',
-        date: '23/04/2019'
-    },
-    {
-        imageUrl: 'https://www.ofuxico.com.br/wp-content/uploads/2021/12/Harry-Potter-foto.jpg',
-        title: 'Harry Potter',
-        rating: 1,
-        summary: 'Modern home in city center in the heart of historic Los Angeles',
-        date: '23/04/2019'
-    },
-    {
-        imageUrl: 'https://www.ofuxico.com.br/wp-content/uploads/2021/12/Harry-Potter-foto.jpg',
-        title: 'Harry Potter',
-        rating: 5,
-        summary: 'Modern home in city center in the heart of historic Los Angeles',
-        date: '23/04/2019'
-    },
-    {
-        imageUrl: 'https://www.ofuxico.com.br/wp-content/uploads/2021/12/Harry-Potter-foto.jpg',
-        title: 'Harry Potter',
-        rating: 2,
-        summary: 'Modern home in city center in the heart of historic Los Angeles',
-        date: '23/04/2019'
-    },
-    {
-        imageUrl: 'https://www.ofuxico.com.br/wp-content/uploads/2021/12/Harry-Potter-foto.jpg',
-        title: 'Harry Potter',
-        rating: 4,
-        summary: 'Modern home in city center in the heart of historic Los Angeles',
-        date: '23/04/2019'
-    },
-]);
+  const [description, setDescription] = useState('');
+  const [rate, setRate] = useState(0);
+  const [release_date, setRelease_date] = useState('');
+  const [image_url, setImage_url] = useState('');
 
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
@@ -92,15 +48,21 @@ function Base() {
   }
 
   const handleCreateMovie = () => {
+    console.log(release_date)
+    console.log(image_url)
     Api.post('/movies', {
       title: title,
-      rate: rating,
-      description: summary
+      rate: rate,
+      description: description,
+      release_date: release_date,
+      image_url: image_url,
+      isFavorite: false
     })
     .then((response) => {
       toast({
         title: `Filme Adicionado com sucesso!`,
         status: 'success',
+        position: 'top',
         isClosable: true,
       })
     })
@@ -108,6 +70,7 @@ function Base() {
       toast({
         title: `Não foi possivel Adicionar, verifique os dados!`,
         status: 'error',
+        position: 'top',
         isClosable: true,
     })
     })
@@ -156,7 +119,7 @@ function Base() {
         </Flex>
     {home ? 
     <Home /> :
-    <Favoritos />
+    <Fav />
   }
   { isOpen && 
       <Drawer
@@ -187,12 +150,12 @@ function Base() {
                   id='desc'
                   placeholder='"Filme de comédia em que o protagonista conta suas histórias"'
                   resize='none'
-                  onChange={(v) => setSummary(v.target.value)}
+                  onChange={(v) => setDescription(v.target.value)}
                   />
               </Box>
               <Box>
                 <FormLabel>Avaliação</FormLabel>
-                <Slider defaultValue={1} min={1} max={5} step={1} colorScheme='teal' onChange={(v) => setRating(v)}
+                <Slider defaultValue={1} min={1} max={5} step={1} colorScheme='teal' onChange={(v) => setRate(v)}
                 >
                     <SliderMark value={1} mt='2' fontSize='sm'>
                         1
@@ -221,7 +184,7 @@ function Base() {
                 <Input
                   id='imageURL'
                   placeholder='"http://image.com"'
-                  onChange={(v) => setImageURL(v.target.value)}
+                  onChange={(v) => setImage_url(v.target.value)}
                 />
               </Box>
               <Box pt='1.5rem'>
@@ -229,7 +192,7 @@ function Base() {
                 <Input
                   size="md"
                   type="date"
-                  onChange={(v) => setDueDate(v.target.value)}
+                  onChange={(v) => setRelease_date(v.target.value)}
                 />
               </Box>
             </Stack>

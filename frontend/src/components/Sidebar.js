@@ -2,18 +2,13 @@ import React from 'react'
 import {
     Flex,
     Button,
-    MenuItem,
 } from '@chakra-ui/react'
 import { FiHome, FiStar } from 'react-icons/fi'
 import NavItem from '../components/NavItem'
-import { Link, Navigate, NavLink, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export default function Sidebar() {
-    let navigate = useNavigate(); 
-    const routeChange = () =>{ 
-        let path = `/favoritos`; 
-        navigate(path);
-    }
+    let navigate = useNavigate();
     return (
         <Flex
             pos="sticky"
@@ -38,14 +33,14 @@ export default function Sidebar() {
 
                 <NavItem icon={FiHome} title="Home"/>
                 <Button onClick={() => {
-                    navigate("/favoritos");
+                    navigate("/fav");
                 }}
                 > 
                 <NavItem icon={FiStar} title="Favoritos"/>
                 </Button>
                 
                 <Button onClick={() => {
-                    navigate("/favoritos");
+                    navigate("/fav");
                 }}
                 >
                 Favoritos
