@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react'; 
-import { Box, Grid, Spinner, Center, useToast } from '@chakra-ui/react'
+import { Box, Grid, useToast, Center, Spinner } from '@chakra-ui/react'
 import Card from '../components/Card';
 import ModalCard from '../components/Modal';
 import Api from '../services/Api';
 
-function Home() {
+function Favoritos() {
 
     const [movies, setMovies] = useState([]);
     const toast = useToast()
 
     const getMovies = () => {
-        Api.get('/movies')
+        Api.get('/movies/favorites')
         .then((response) => {
             setMovies(response.data)
         })
@@ -38,7 +38,7 @@ function Home() {
                     {
                         movies.map((movie, index) => {
                             return(
-                                <ModalCard key={index} reload={() => reloadPage} source='home' id={movie._id} image_url={movie.image_url} title={movie.title} rate={movie.rate} description={movie.description} release_date={movie.release_date}>
+                                <ModalCard key={index} reload={() => reloadPage()}id={movie._id} source='fav' image_url={movie.image_url} title={movie.title} rate={movie.rate} description={movie.description} release_date={movie.release_date}>
                                     <Card image_url={movie.image_url} title={movie.title} rate={movie.rate} release_date={movie.release_date} />
                                 </ModalCard>
                             )
@@ -60,4 +60,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default Favoritos;

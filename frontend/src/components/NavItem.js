@@ -13,7 +13,7 @@ export default function NavItem({ title, onCLick }) {
             w="100%"
             alignItems="flex"
         >
-            <Button onClick={onCLick} leftIcon={title === 'Home' ? <FiHome /> : <FiStar />} colorScheme='telegram' variant='solid'>
+            <Button onClick={onCLick} leftIcon={title === 'Home' ? <FiHome /> : <FiStar />} colorScheme='blue' variant='solid'>
                 {title}
             </Button>
         </Flex>
