@@ -151,18 +151,20 @@ function ModalCard({id, image_url, title, rate, description, release_date, child
         <ModalCloseButton />
         <ModalBody>
             <Center overflow='hidden'>
-                <Image borderRadius='lg' src={image_url} fallbackSrc='https://www.charlotteathleticclub.com/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png'/>
+                <Image htmlHeight='450px' htmlWidth='300px' borderRadius='lg' src={image_url} fallbackSrc='https://www.charlotteathleticclub.com/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png'/>
             </Center>
-            <Box p='3'>
+            <Box pt='3'>
                 <Text
                     fontSize='sm'
                     textColor='black'
+                    fontWeight='bold'
                     noOfLines={2}
+                    textAlign='center'
                 >
                     {description || ' '}
                 </Text>
             </Box>
-            <Box display='flex' alignItems='center' p='1rem' justifyContent='space-around'>
+            <Box display='flex' pt='0.5rem' justifyContent='space-around'>
                 <Box>
                 {Array(5)
                 .fill('')
@@ -187,7 +189,7 @@ function ModalCard({id, image_url, title, rate, description, release_date, child
                 </Box>
                 <Box
                     color='Black'
-                    fontWeight='semibold'
+                    fontWeight='bold'
                     letterSpacing='wide'
                     alignSelf='flex-end'
                     fontSize='xs'
