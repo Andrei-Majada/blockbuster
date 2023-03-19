@@ -1,8 +1,7 @@
-import { useState } from 'react'; 
+import { useEffect, useState } from 'react'; 
 import Home from './Home';
 import NavItem from '../components/NavItem';
 import Favoritos from './Favoritos';
-import SliderRating from '../components/SliderRating'
 import {
   Drawer,
   DrawerBody,
@@ -18,13 +17,71 @@ import {
   Input,
   FormLabel,
   useDisclosure,
-  Textarea
+  Textarea,
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderMark,
+  useToast,
 } from '@chakra-ui/react'
+import Api from '../services/Api';
 
 function Base() {
   const [home, setHome] = useState(true);
 
+  const [title, setTitle] = useState('');
+  const [summary, setSummary] = useState('');
+  const [rating, setRating] = useState(0);
+  const [dueDate, setDueDate] = useState('');
+  const [imageURL, setImageURL] = useState('');
+
+  const [movies, setMovies] = useState([
+    {
+        imageUrl: 'https://www.ofuxico.com.br/wp-content/uploads/2021/12/Harry-Potter-foto.jpg',
+        title: 'Harry Potter',
+        rating: 4,
+        summary: 'Modern home in city center in the heart of historic Los Angeles'
+    },
+    {
+        imageUrl: 'https://www.ofuxico.com.br/wp-content/uploads/2021/12/Harry-Potter-foto.jpg',
+        title: 'Harry Potter',
+        rating: 3,
+        summary: 'Modern home in city center in the heart of historic Los Angeles',
+        date: '23/04/2019'
+    },
+    {
+        imageUrl: 'https://www.ofuxico.com.br/wp-content/uploads/2021/12/Harry-Potter-foto.jpg',
+        title: 'Harry Potter',
+        rating: 1,
+        summary: 'Modern home in city center in the heart of historic Los Angeles',
+        date: '23/04/2019'
+    },
+    {
+        imageUrl: 'https://www.ofuxico.com.br/wp-content/uploads/2021/12/Harry-Potter-foto.jpg',
+        title: 'Harry Potter',
+        rating: 5,
+        summary: 'Modern home in city center in the heart of historic Los Angeles',
+        date: '23/04/2019'
+    },
+    {
+        imageUrl: 'https://www.ofuxico.com.br/wp-content/uploads/2021/12/Harry-Potter-foto.jpg',
+        title: 'Harry Potter',
+        rating: 2,
+        summary: 'Modern home in city center in the heart of historic Los Angeles',
+        date: '23/04/2019'
+    },
+    {
+        imageUrl: 'https://www.ofuxico.com.br/wp-content/uploads/2021/12/Harry-Potter-foto.jpg',
+        title: 'Harry Potter',
+        rating: 4,
+        summary: 'Modern home in city center in the heart of historic Los Angeles',
+        date: '23/04/2019'
+    },
+]);
+
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const toast = useToast()
 
   const handleHomePage = () => {
     setHome(true)
@@ -32,6 +89,30 @@ function Base() {
 
   const handleFavPage = () => {
     setHome(false)
+  }
+
+  const handleCreateMovie = () => {
+    Api.post('/movies', {
+      title: title,
+      rate: rating,
+      description: summary
+    })
+    .then((response) => {
+      toast({
+        title: `Filme Adicionado com sucesso!`,
+        status: 'success',
+        isClosable: true,
+      })
+    })
+    .catch(() => {
+      toast({
+        title: `Não foi possivel Adicionar, verifique os dados!`,
+        status: 'error',
+        isClosable: true,
+    })
+    })
+
+    onClose()
   }
 
   return (
@@ -93,29 +174,62 @@ function Base() {
           <DrawerBody>
             <Stack spacing='24px'>
               <Box>
-                <FormLabel htmlFor='title'>Título</FormLabel>
+                <FormLabel>Título</FormLabel>
                 <Input
                   id='title'
                   placeholder='"Forest Gump"'
+                  onChange={(v) => setTitle(v.target.value)}
                 />
               </Box>
               <Box>
-                <FormLabel htmlFor='desc'>Resumo</FormLabel>
+                <FormLabel>Resumo</FormLabel>
                 <Textarea
                   id='desc'
                   placeholder='"Filme de comédia em que o protagonista conta suas histórias"'
                   resize='none'
+                  onChange={(v) => setSummary(v.target.value)}
                   />
               </Box>
               <Box>
-                <FormLabel htmlFor='title'>Avaliação</FormLabel>
-                <SliderRating />
+                <FormLabel>Avaliação</FormLabel>
+                <Slider defaultValue={1} min={1} max={5} step={1} colorScheme='teal' onChange={(v) => setRating(v)}
+                >
+                    <SliderMark value={1} mt='2' fontSize='sm'>
+                        1
+                    </SliderMark>
+                    <SliderMark value={2} mt='2' fontSize='sm'>
+                        2
+                    </SliderMark>
+                    <SliderMark value={3} mt='2' fontSize='sm'>
+                        3
+                    </SliderMark>
+                    <SliderMark value={4} mt='2' fontSize='sm'>
+                        4
+                    </SliderMark>
+                    <SliderMark value={5} mt='2' fontSize='sm'>
+                        5
+                    </SliderMark>
+                    <SliderTrack >
+                        <Box position='relative' right={10} />
+                        <SliderFilledTrack bg='tomato' />
+                    </SliderTrack>
+                    <SliderThumb boxSize={6} />
+                </Slider>
+              </Box>
+              <Box>
+                <FormLabel>URL da imagem</FormLabel>
+                <Input
+                  id='imageURL'
+                  placeholder='"http://image.com"'
+                  onChange={(v) => setImageURL(v.target.value)}
+                />
               </Box>
               <Box pt='1.5rem'>
-                <FormLabel htmlFor='title'>Data de Lançamento</FormLabel>
+                <FormLabel>Data de Lançamento</FormLabel>
                 <Input
                   size="md"
                   type="date"
+                  onChange={(v) => setDueDate(v.target.value)}
                 />
               </Box>
             </Stack>
@@ -123,9 +237,9 @@ function Base() {
 
           <DrawerFooter borderTopWidth='1px'>
             <Button variant='outline' mr={3} onClick={onClose}>
-              Cancel
+              Cancelar
             </Button>
-            <Button colorScheme='blue'>Submit</Button>
+            <Button colorScheme='blue' onClick={handleCreateMovie} >Criar</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

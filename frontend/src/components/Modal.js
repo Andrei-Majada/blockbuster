@@ -17,20 +17,8 @@ import { BsPencilSquare, BsStarHalf, BsTrash3Fill } from 'react-icons/bs'
 
 import { useDisclosure } from '@chakra-ui/react';
 
-function ModalCard({children}) {
+function ModalCard({imageUrl, title, rating, summary, date, children}) {
     const { isOpen, onOpen, onClose } = useDisclosure()
-
-    const property = {
-        imageUrl: 'https://bit.ly/2Z4KKcF',
-        imageAlt: 'Rear view of modern home with pool',
-        beds: 3,
-        baths: 2,
-        title: 'Modern home',
-        description: 'lorem ipson lorem ipson lorem ipson lorem ipson lorem ipson lorem ipson lorem ipson lorem ipson lorem ipsonlorem ipson',
-        formattedPrice: '$1,900.00',
-        reviewCount: 34,
-        rating: 4,
-    }
 
     return (
     <>
@@ -38,11 +26,11 @@ function ModalCard({children}) {
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent>
-        <ModalHeader alignSelf='center'>{property.title}</ModalHeader>
+        <ModalHeader alignSelf='center'>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
             <Box overflow='hidden'>
-                <Image borderRadius='lg' src={property.imageUrl} alt={property.imageAlt} />
+                <Image borderRadius='lg' src={imageUrl} fallbackSrc='https://www.charlotteathleticclub.com/assets/camaleon_cms/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef.png'/>
             </Box>
             <Box p='3'>
                 <Text
@@ -50,7 +38,7 @@ function ModalCard({children}) {
                     textColor='black'
                     noOfLines={2}
                 >
-                    {property.description}
+                    {summary}
                 </Text>
             </Box>
             <Box display='flex' alignItems='center' p='1rem' justifyContent='space-around'>
@@ -60,7 +48,7 @@ function ModalCard({children}) {
                 .map((_, i) => (
                     <StarIcon
                     key={i}
-                    color={i < property.rating ? 'orange' : 'gray.300'}
+                    color={i < rating ? 'orange' : 'gray.300'}
                     />
                 ))}
                 </Box>
@@ -82,7 +70,7 @@ function ModalCard({children}) {
                     fontSize='xs'
                     ml='2'
                     >
-                    24/08/2019
+                    {date}
                 </Box>
             </Box>
         </ModalBody>
